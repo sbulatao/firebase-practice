@@ -2,12 +2,33 @@ import React from 'react';
 import logo from './logo.svg';
 import './App.css';
 import { auth, db } from './firebase/init';
-import { collection, addDoc, doc, getDocs, getDoc, query, where } from 'firebase/firestore';
+import { collection, addDoc, doc, getDocs, getDoc, query, where, updateDoc } from 'firebase/firestore';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'firebase/auth';
 
 function App() {
   const [user, setUser] = React.useState({});
   const [loading, setLoading] = React.useState(true);
+
+  async function updatePost() {
+    const hardcodedId = "fnHDMr1jEoK10eJhI2di";
+    const postRef = doc(db, "posts", hardcodedId);
+    const post = await getPostById(hardcodedId);
+    // console.log(post);
+
+    // const newPost = {
+    //   description: "Finish Frontend Simplified",
+    //   uid: "1",
+    //   title: "Land ahhhhhhhh job"
+    // };
+    // updateDoc(postRef, newPost);
+
+    const newPost = {
+      ...post,
+      title: "Land ahhhhhhhhhhhhhhhhhhhhh job"
+    };
+    console.log(newPost);
+    updateDoc(postRef, newPost);
+  }
 
   function createPost() {
     const post = {
@@ -27,13 +48,14 @@ function App() {
     console.log(posts);
   }
 
-  async function getPostById() {
-    const hardcodedId = "fnHDMr1jEoK10eJhI2di";
-    const postRef = doc(db, "posts", hardcodedId);
+  async function getPostById(id) {
+    // const hardcodedId = "fnHDMr1jEoK10eJhI2di";
+    const postRef = doc(db, "posts", id);
     // console.log(postRef);
     const postSnap = await getDoc(postRef);
-    const post = postSnap.data();
-    console.log(post);
+    // const post = postSnap.data();
+    // console.log(post);
+    return postSnap.data();
   }
 
   async function getPostByUid() {
@@ -93,6 +115,7 @@ function App() {
       <button onClick={getAllPost}>Get All Posts</button>
       <button onClick={getPostById}>Get Post By Id</button>
       <button onClick={getPostByUid}>Get Post By Uid</button>
+      <button onClick={updatePost}>Update Post</button>
     </div>
   );
 }
