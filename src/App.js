@@ -2,7 +2,7 @@ import React from 'react';
 import logo from './logo.svg';
 import './App.css';
 import { auth, db } from './firebase/init';
-import { collection, addDoc, doc, getDocs, getDoc, query, where, updateDoc } from 'firebase/firestore';
+import { collection, addDoc, doc, getDocs, getDoc, query, where, updateDoc, deleteDoc } from 'firebase/firestore';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'firebase/auth';
 
 function App() {
@@ -28,6 +28,12 @@ function App() {
     };
     console.log(newPost);
     updateDoc(postRef, newPost);
+  }
+
+  function deletePost(){
+    const hardcodedId = "fnHDMr1jEoK10eJhI2di";
+    const postRef = doc(db, "posts", hardcodedId);
+    deleteDoc(postRef); 
   }
 
   function createPost() {
@@ -116,6 +122,7 @@ function App() {
       <button onClick={getPostById}>Get Post By Id</button>
       <button onClick={getPostByUid}>Get Post By Uid</button>
       <button onClick={updatePost}>Update Post</button>
+      <button onClick={deletePost}>Delete Post</button>
     </div>
   );
 }
