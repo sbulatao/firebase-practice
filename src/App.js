@@ -1,12 +1,21 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
-import { auth } from './firebase/init';
+import { auth, db } from './firebase/init';
+import { collection, addDoc } from 'firebase/firestore';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'firebase/auth';
 
 function App() {
   const [user, setUser] = React.useState({});
   const [loading, setLoading] = React.useState(true);
+
+  function createPost() {
+    const post = {
+      title: "Land a full-time job",
+      description: "Finish Frontend Simplified",
+    };
+    addDoc(collection(db, "posts"), post) // name of the collection: posts
+  }
 
   React.useEffect(() => {
     onAuthStateChanged(auth, (user) => {
@@ -52,6 +61,8 @@ function App() {
       <button onClick={login}>Login</button>
       <button onClick={logout}>Logout</button>
       {loading ? 'loading...': user.email}
+      <button onClick={createPost}>Create Post</button>
+      
     </div>
   );
 }
